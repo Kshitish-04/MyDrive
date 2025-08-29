@@ -1,0 +1,351 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Drive - File Storage</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .file-card {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .file-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .upload-zone {
+            transition: all 0.3s ease;
+        }
+        
+        .upload-zone:hover {
+            transform: scale(1.02);
+            border-color: #667eea;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            .glass-effect {
+                margin: 0.5rem;
+                padding: 1rem;
+            }
+            
+            .file-card {
+                padding: 0.75rem;
+            }
+            
+            .btn-primary, .btn-danger {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.875rem;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .glass-effect {
+                border-radius: 1rem;
+                padding: 0.75rem;
+            }
+            
+            .file-card {
+                padding: 0.5rem;
+            }
+            
+            .btn-primary, .btn-danger {
+                padding: 0.625rem 1.25rem;
+                font-size: 0.8125rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen">
+    <main class="min-h-screen p-3 sm:p-6">
+        <!-- Header with title and logout -->
+        <div class="glass-effect rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 fade-in">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
+                <div class="flex items-center space-x-3">
+                    <i class="ri-cloud-line text-white text-2xl sm:text-3xl"></i>
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-white">My Drive</h1>
+                        <p class="text-white text-opacity-80 text-xs sm:text-sm">Your personal cloud storage</p>
+                    </div>
+                </div>
+                <a href="/logout" class="btn-danger text-white font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-xl border-0 shadow-lg text-sm sm:text-base self-start sm:self-auto">
+                    <i class="ri-logout-box-line mr-1 sm:mr-2"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="glass-effect rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 fade-in">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
+                <h2 class="text-lg sm:text-xl font-semibold text-white">Upload Files</h2>
+                <div class="text-white text-opacity-70 text-xs sm:text-sm">
+                    <i class="ri-information-line mr-1"></i>
+                    Max size: 2MB
+                </div>
+            </div>
+            <button onclick="openPop()" class="btn-primary text-white font-semibold py-2 px-6 sm:py-3 sm:px-8 rounded-xl border-0 shadow-lg text-sm sm:text-base w-full sm:w-auto">
+                <i class="ri-upload-cloud-2-line mr-2"></i>
+                Upload File
+            </button>
+        </div>
+
+        <!-- Upload Modal -->
+        <div class="pop hidden modal-backdrop fixed top-0 left-0 h-screen w-screen flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-8 max-w-md w-full relative fade-in">
+                <!-- Close Button -->
+                <button class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-gray-600 text-xl sm:text-2xl transition-colors" onclick="closePop()">
+                    <i class="ri-close-line"></i>
+                </button>
+                
+                <!-- Modal Header -->
+                <div class="text-center mb-4 sm:mb-6">
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                        <i class="ri-upload-cloud-2-line text-white text-xl sm:text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">Upload File</h3>
+                    <p class="text-gray-500 text-sm sm:text-base">Choose a file to upload to your drive</p>
+                </div>
+
+                <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+                    <!-- Upload Zone -->
+                    <div class="mb-4 sm:mb-6">
+                        <label for="dropzone-file"
+                            class="upload-zone flex flex-col items-center justify-center w-full h-32 sm:h-48 border-2 border-dashed border-gray-300 rounded-xl sm:rounded-2xl cursor-pointer bg-gray-50 hover:bg-gray-100">
+                            <div class="flex flex-col items-center justify-center pt-3 pb-3 sm:pt-5 sm:pb-6">
+                                <i class="ri-cloud-upload-line text-2xl sm:text-4xl text-gray-400 mb-2 sm:mb-4"></i>
+                                <p class="mb-1 sm:mb-2 text-xs sm:text-sm text-gray-500 text-center px-2">
+                                    <span class="font-semibold">Click to upload</span> or drag and drop
+                                </p>
+                                <p class="text-xs text-gray-400">Maximum file size: 2MB</p>
+                            </div>
+                            <input id="dropzone-file" type="file" class="hidden" name="file" />
+                        </label>
+                    </div>
+
+                    <!-- Upload Button -->
+                    <button type="submit" class="btn-primary w-full text-white font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-xl border-0 shadow-lg text-sm sm:text-base">
+                        <i class="ri-upload-2-line mr-2"></i>
+                        Upload File
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Files Section -->
+        <div class="glass-effect rounded-2xl p-4 sm:p-6 fade-in">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                <h2 class="text-lg sm:text-xl font-semibold text-white">Your Files</h2>
+                <div class="text-white text-opacity-70 text-xs sm:text-sm">
+                    <i class="ri-file-list-3-line mr-1"></i>
+                    <%= files.length %> file<%= files.length !== 1 ? 's' : '' %>
+                </div>
+            </div>
+            
+            <% if (files.length === 0) { %>
+                <div class="text-center py-8 sm:py-12">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-10 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                        <i class="ri-folder-open-line text-white text-2xl sm:text-3xl opacity-50"></i>
+                    </div>
+                    <p class="text-white text-opacity-70 text-base sm:text-lg mb-1 sm:mb-2">No files yet</p>
+                    <p class="text-white text-opacity-50 text-xs sm:text-sm">Upload your first file to get started</p>
+                </div>
+            <% } else { %>
+                <div class="grid gap-3 sm:gap-4">
+                    <% files.forEach((file, index)=> { %>
+                        <div class="file-card rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-lg border border-gray-200" style="animation-delay: <%= index * 0.1 %>s">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <i class="ri-file-text-line text-white text-lg sm:text-xl"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="font-semibold text-gray-800 truncate text-sm sm:text-lg">
+                                            <%= file.originalname %>
+                                        </h3>
+                                        <p class="text-gray-500 text-xs sm:text-sm">
+                                            <i class="ri-time-line mr-1"></i>
+                                            Uploaded recently
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+                                    <a href="/download/<%= file.path %>" 
+                                       class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105" 
+                                       download="<%= file.originalname %>" 
+                                       title="Download">
+                                        <i class="ri-download-2-line text-sm sm:text-base"></i>
+                                    </a>
+                                    <button onclick="deleteFile('<%= file.path %>', '<%= file.originalname %>')" 
+                                            class="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105" 
+                                            title="Delete">
+                                        <i class="ri-delete-bin-line text-sm sm:text-base"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <script src="https://kit.fontawesome.com/7a4b62b0a4.js" crossorigin="anonymous"></script>
+
+    <script>
+        function openPop() {
+            document.querySelector(".pop").style.display = "flex";
+        }
+        function closePop() {
+            document.querySelector(".pop").style.display = "none";
+        }
+
+        // Handle file upload form submission
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('dropzone-file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file to upload.');
+                return;
+            }
+            
+            // Check file size on client side (2MB = 2 * 1024 * 1024 bytes)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('File size too large. Maximum allowed size is 2MB.');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('File uploaded successfully!');
+                    closePop();
+                    window.location.reload();
+                } else {
+                    alert(result.message || 'Error uploading file');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error uploading file. Please try again.');
+            }
+        });
+
+        async function deleteFile(filePath, fileName) {
+            // Show confirmation dialog
+            if (!confirm(`Are you sure you want to delete "${fileName}"? This action cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/delete/${filePath}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Show success message
+                    alert('File deleted successfully!');
+                    // Reload the page to update the file list
+                    window.location.reload();
+                } else {
+                    // Show error message
+                    alert(result.message || 'Error deleting file');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error deleting file. Please try again.');
+            }
+        }
+    </script>
+</body>
+
+</html>
