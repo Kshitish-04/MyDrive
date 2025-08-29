@@ -30,6 +30,14 @@ server.set("view engine","ejs")
 
 
 
-server.listen(3000,()=>{
-    console.log("Server running PORT: 3000")
-})
+const PORT = process.env.PORT || 3000;
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+    server.listen(PORT, ()=>{
+        console.log(`Server running on PORT: ${PORT}`)
+    })
+}
+
+// Export for Vercel
+module.exports = server;
