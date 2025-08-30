@@ -122,6 +122,7 @@ rout.delete('/delete/:path',authMiddleware,async(req,res)=>{
         res.json({message: 'File deleted successfully'})
     } catch (error) {
         console.error('Error deleting file:', error)
+        console.error("Delete error:", error);
         res.status(500).json({message: 'Error deleting file'})
     }
 })
