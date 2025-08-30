@@ -8,3 +8,4 @@ const firebase = Firebase.initializeApp({
 });
 
 module.exports = Firebase;
+
