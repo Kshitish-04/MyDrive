@@ -2,7 +2,7 @@
 
 A beautiful, modern cloud storage application built with Node.js, Express, and MongoDB. Upload, manage, and access your files from anywhere with a stunning glass-morphism UI design.
 
-![MyDrive Banner](https://via.placeholder.com/800x400/667eea/ffffff?text=MyDrive+-+Your+Personal+Cloud+Storage)
+![MyDrive Banner](../image/banner.png)
 
 ## ✨ Features
 
@@ -43,7 +43,8 @@ A beautiful, modern cloud storage application built with Node.js, Express, and M
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/mydrive.git
+   git clone https://github.com/Kshitish-04/MyDrive.git
+
    cd mydrive
    ```
 
@@ -56,15 +57,23 @@ A beautiful, modern cloud storage application built with Node.js, Express, and M
    Create a `.env` file in the root directory:
    ```env
    # Database
-   MONGODB_URI=mongodb://localhost:27017/mydrive
+   MONGO_URL=mongodb://localhost:27017/mydrive
    
-   # JWT Secret
+   # JWT
    JWT_SECRET=your-super-secret-jwt-key-here
    
-   # Firebase Configuration
+   # Firebase
+   FIREBASE_TYPE=service_account
    FIREBASE_PROJECT_ID=your-firebase-project-id
+   FIREBASE_PRIVATE_KEY_ID=your-firebase-private-key-id
    FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour-Firebase-Private-Key\n-----END PRIVATE KEY-----\n"
    FIREBASE_CLIENT_EMAIL=your-firebase-service-account-email
+   FIREBASE_CLIENT_ID=your-firebase-client-id
+   FIREBASE_AUTH_URI=https://accounts.google.com/o/oauth2/auth
+   FIREBASE_TOKEN_URI=https://oauth2.googleapis.com/token
+   FIREBASE_AUTH_PROVIDER_X509_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
+   FIREBASE_CLIENT_X509_CERT_URL=https://www.googleapis.com/robot/v1/metadata/x509/your-firebase-service-account-email
+   FIREBASE_UNIVERSE_DOMAIN=googleapis.com
    FIREBASE_STORAGE_BUCKET=your-firebase-storage-bucket
    
    # Server Configuration
@@ -111,24 +120,28 @@ A beautiful, modern cloud storage application built with Node.js, Express, and M
 ## 📂 Project Structure
 
 ```
-mydrive/
-├── 📁 models/
+Drive/
+├── image/
+│   └── banner.png           # Banner image for README
+├── models/
 │   └── user.js              # User schema and model
-├── 📁 routes/
+├── routes/
 │   ├── index.js             # Main routes
 │   └── user.js              # Authentication routes
-├── 📁 views/
+├── views/
 │   ├── home.ejs             # Main dashboard
 │   ├── login.ejs            # Login page
 │   └── register.ejs         # Registration page
-├── 📁 config/
+├── config/
 │   └── firebase.js          # Firebase configuration
-├── 📁 middleware/
+├── middleware/
 │   └── auth.js              # Authentication middleware
-├── 📄 app.js                # Main application file
-├── 📄 package.json          # Dependencies and scripts
-├── 📄 .env                  # Environment variables
-└── 📄 README.md             # This file
+├── public/
+│   └── ...                  # Static assets (CSS, JS, etc.)
+├── app.js                   # Main application file
+├── package.json             # Dependencies and scripts
+├── .env                     # Environment variables
+└── README.md                # This file
 ```
 
 ## 🎯 API Endpoints
@@ -149,15 +162,51 @@ mydrive/
 ## 🔧 Configuration
 
 ### Environment Variables
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `MONGODB_URI` | MongoDB connection string | ✅ |
-| `JWT_SECRET` | Secret key for JWT tokens | ✅ |
-| `FIREBASE_PROJECT_ID` | Firebase project ID | ✅ |
-| `FIREBASE_PRIVATE_KEY` | Firebase service account private key | ✅ |
-| `FIREBASE_CLIENT_EMAIL` | Firebase service account email | ✅ |
-| `FIREBASE_STORAGE_BUCKET` | Firebase storage bucket name | ✅ |
-| `PORT` | Server port (default: 3000) | ❌ |
+| Variable                                 | Description                                   | Required |
+|-------------------------------------------|-----------------------------------------------|----------|
+| `MONGO_URL`                              | MongoDB connection string                     | ✅       |
+| `JWT_SECRET`                             | Secret key for JWT tokens                     | ✅       |
+| `FIREBASE_TYPE`                          | Firebase service account type                 | ✅       |
+| `FIREBASE_PROJECT_ID`                    | Firebase project ID                           | ✅       |
+| `FIREBASE_PRIVATE_KEY_ID`                | Firebase private key ID                       | ✅       |
+| `FIREBASE_PRIVATE_KEY`                   | Firebase service account private key          | ✅       |
+| `FIREBASE_CLIENT_EMAIL`                  | Firebase service account email                | ✅       |
+| `FIREBASE_CLIENT_ID`                     | Firebase client ID                            | ✅       |
+| `FIREBASE_AUTH_URI`                      | Firebase auth URI                             | ✅       |
+| `FIREBASE_TOKEN_URI`                     | Firebase token URI                            | ✅       |
+| `FIREBASE_AUTH_PROVIDER_X509_CERT_URL`   | Firebase auth provider X509 cert URL          | ✅       |
+| `FIREBASE_CLIENT_X509_CERT_URL`          | Firebase client X509 cert URL                 | ✅       |
+| `FIREBASE_UNIVERSE_DOMAIN`               | Firebase universe domain                      | ✅       |
+| `FIREBASE_STORAGE_BUCKET`                | Firebase storage bucket name                  | ✅       |
+| `PORT`                                   | Server port (default: 3000)                   | ❌       |
+| `NODE_ENV`                               | Node environment (`development`/`production`) | ❌       |
+| `SESSION_SECRET`                         | Secret for session management (if used)       | ❌       |
+
+### Example `.env` file
+```env
+# Database
+MONGO_URL=mongodb://localhost:27017/mydrive
+
+# JWT
+JWT_SECRET=your-super-secret-jwt-key-here
+
+# Firebase
+FIREBASE_TYPE=service_account
+FIREBASE_PROJECT_ID=your-firebase-project-id
+FIREBASE_PRIVATE_KEY_ID=your-firebase-private-key-id
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour-Firebase-Private-Key\n-----END PRIVATE KEY-----\n"
+FIREBASE_CLIENT_EMAIL=your-firebase-service-account-email
+FIREBASE_CLIENT_ID=your-firebase-client-id
+FIREBASE_AUTH_URI=https://accounts.google.com/o/oauth2/auth
+FIREBASE_TOKEN_URI=https://oauth2.googleapis.com/token
+FIREBASE_AUTH_PROVIDER_X509_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
+FIREBASE_CLIENT_X509_CERT_URL=https://www.googleapis.com/robot/v1/metadata/x509/your-firebase-service-account-email
+FIREBASE_UNIVERSE_DOMAIN=googleapis.com
+FIREBASE_STORAGE_BUCKET=your-firebase-storage-bucket
+
+# Server Configuration
+PORT=3000
+```
 
 ### File Upload Limits
 - **Maximum file size**: 2MB
@@ -246,11 +295,11 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 If you have any questions or need help, please:
 - Open an issue on GitHub
 - Check the documentation
-- Contact the maintainers
+- Contact: pradhankshitish1@gmail.com
 
 ---
 
 <div align="center">
-  <p>Made with ❤️ by [Your Name]</p>
+  <p>Made with ❤️ by [Kshitish]</p>
   <p>⭐ Star this repo if you found it helpful!</p>
 </div>
